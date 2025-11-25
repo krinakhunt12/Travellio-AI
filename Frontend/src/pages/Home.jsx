@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
@@ -43,9 +43,15 @@ const destinations = [
   },
 ];
 
-function DestinationCard({ d }) {
+function DestinationCard({ d, onOpen }) {
   return (
-    <div className="relative rounded-2xl overflow-hidden transform transition-transform duration-300 hover:scale-105 shadow-2xl bg-card">
+    <div
+      onClick={() => onOpen && onOpen(d)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpen && onOpen(d)}
+      className="relative rounded-2xl overflow-hidden transform transition-transform duration-300 hover:scale-105 shadow-2xl bg-card cursor-pointer focus:outline-none"
+    >
       <img src={d.img} alt={d.name} className="w-full h-48 object-cover" />
       <div className="p-4 bg-white/90 backdrop-blur-sm text-slate-black absolute bottom-0 left-0 right-0 flex items-center justify-between">
         <div>
@@ -58,8 +64,89 @@ function DestinationCard({ d }) {
   );
 }
 
+function DestinationModal({ dest, onClose }) {
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === 'Escape') onClose?.();
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  if (!dest) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+
+      <div className="relative w-[90%] md:w-3/4 lg:w-2/3 max-h-[90vh] overflow-auto rounded-3xl bg-white shadow-2xl transform transition-all duration-500 scale-100">
+        <div className="w-full h-56 md:h-72 overflow-hidden rounded-t-3xl">
+          <img src={dest.img} alt={dest.name} className="w-full h-full object-cover" />
+        </div>
+
+        <div className="p-6 md:p-8">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <h2 className="text-2xl md:text-3xl font-extrabold" style={{ fontFamily: 'Poppins, sans-serif', color: '#0F172A' }}>{dest.name}</h2>
+              <div className="text-sm text-gray-500 mt-1">{dest.distance} • Best month: {dest.bestMonth}</div>
+              <p className="mt-4 text-gray-700">{dest.description || 'A breathtaking destination renowned for its beaches, culture and unforgettable experiences. Travellio curates the best activities, places to eat, and local insights to make your trip seamless.'}</p>
+            </div>
+
+            <div className="w-36 md:w-44 text-right">
+              <div className="text-3xl font-extrabold" style={{ color: '#2C74B3' }}>$1,250</div>
+              <div className="text-xs text-gray-500">Estimated total</div>
+              <button onClick={() => { window.location.href = '/preferences'; }} className="mt-4 w-full px-4 py-2 rounded-xl font-semibold text-white" style={{ background: 'linear-gradient(135deg,#6BBFF1,#2C74B3)', boxShadow: '0 8px 20px rgba(44,116,179,0.12)' }}>
+                Plan Trip
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 rounded-2xl bg-gray-50">
+              <div className="text-sm text-gray-500">Highlights</div>
+              <ul className="mt-2 text-sm text-gray-700 space-y-1">
+                <li>• Stunning beaches</li>
+                <li>• Rich cultural sites</li>
+                <li>• Vibrant dining scene</li>
+              </ul>
+            </div>
+            <div className="p-4 rounded-2xl bg-gray-50">
+              <div className="text-sm text-gray-500">Top Activities</div>
+              <ul className="mt-2 text-sm text-gray-700 space-y-1">
+                <li>• Temple visits</li>
+                <li>• Surf lessons</li>
+                <li>• Rice terrace walks</li>
+              </ul>
+            </div>
+            <div className="p-4 rounded-2xl bg-gray-50">
+              <div className="text-sm text-gray-500">Best Time to Visit</div>
+              <div className="mt-2 text-sm text-gray-700">{dest.bestMonth}</div>
+            </div>
+          </div>
+
+          <div className="mt-6 flex items-center justify-between">
+            <div className="text-sm text-gray-500">Want a customized plan? Try preferences to tailor this trip.</div>
+            <div className="flex items-center gap-3">
+              <button onClick={onClose} className="px-4 py-2 rounded-lg border">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const navigate = useNavigate();
+  const [selectedDest, setSelectedDest] = useState(null);
+
+  function openDestination(d) {
+    setSelectedDest(d);
+  }
+
+  function closeDestination() {
+    setSelectedDest(null);
+  }
 
   return (
     <div className="min-h-screen font-sans antialiased bg-page" style={{ color: 'var(--color-slate-black)' }}>
@@ -149,11 +236,13 @@ export default function Home() {
           <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: 'var(--color-slate-black)' }}>
             Popular Destinations
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {destinations.slice(0,6).map((d) => (
-              <DestinationCard key={d.name} d={d} />
+              <DestinationCard key={d.name} d={d} onOpen={openDestination} />
             ))}
           </div>
+
+          {selectedDest && <DestinationModal dest={selectedDest} onClose={closeDestination} />}
         </section>
 
         <section className="mt-16 max-w-7xl mx-auto p-8 rounded-2xl" style={{ background: 'linear-gradient(180deg, #FFFFFF 0%, #D9EEF9 100%)' }}>
