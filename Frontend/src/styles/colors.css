@@ -1,0 +1,189 @@
+/* ========================================
+   TRAVELLIO COLOR PALETTE & GRADIENTS
+   Modern Travel App Aesthetic
+   ======================================== */
+
+:root {
+  /* Primary Brand Colors */
+  --color-ocean-blue: #2C74B3;
+  --color-sky-blue: #6BBFF1;
+  --color-mist-sky: #D9EEF9;
+  --color-white: #FFFFFF;
+  --color-soft-gray: #F1F5F9;
+  --color-slate-black: #0F172A;
+  --color-deep-navy: #0F172A;
+  
+  /* Hero Fade Colors */
+  --fade-transparent: rgba(255, 255, 255, 0);
+  --fade-mid: #D9EEF9;
+  --fade-bottom: #FFFFFF;
+  
+  /* Warm Accent (for badges, deals) */
+  --warm-orange: #FF8E72;
+  --warm-gold: #FFD37E;
+}
+
+/* ========================================
+   GRADIENT SYSTEM
+   ======================================== */
+
+/* A. Hero → Content Transition Gradient */
+.gradient-hero-fade {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    #D9EEF9 40%,
+    #FFFFFF 100%
+  );
+}
+
+/* B. Section Background (Sky Theme) */
+.gradient-sky {
+  background: linear-gradient(180deg, #FFFFFF 0%, #D9EEF9 100%);
+}
+
+/* C. Primary Button Gradient */
+.btn-primary {
+  background: linear-gradient(135deg, #6BBFF1, #2C74B3);
+  color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(44, 116, 179, 0.3);
+}
+
+/* D. Warm Accent Gradient (for badges, best time) */
+.badge-warm {
+  background: linear-gradient(135deg, #FFD37E, #FF8E72);
+  color: white;
+}
+
+/* E. Glassmorphism Cards */
+.gradient-ocean-glass {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.shadow-glass {
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.1);
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Page Background (Alternating White + Sky) */
+.bg-page {
+  background: #FFFFFF;
+}
+
+.bg-sky-tint {
+  background: #D9EEF9;
+}
+
+/* Card Backgrounds */
+.bg-card {
+  background: white;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.bg-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+/* Search Input Glass */
+.bg-search-glass {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Text Colors */
+.text-primary {
+  color: var(--color-ocean-blue);
+}
+
+.text-sky {
+  color: var(--color-sky-blue);
+}
+
+/* Primary Dark (for footer) */
+.bg-primary-dark {
+  background: var(--color-deep-navy);
+}
+
+/* ========================================
+   SCROLL-AWARE NAVBAR
+   ======================================== */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s;
+  background: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(6px);
+  padding: 1rem 2rem;
+}
+
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  backdrop-filter: none;
+}
+
+.navbar-link {
+  color: white;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.navbar.scrolled .navbar-link {
+  color: var(--color-slate-black);
+}
+
+.navbar-link:hover {
+  color: var(--color-sky-blue);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* Airplane animation */
+.plane {
+  transform: translate(10px, 80px);
+  animation: fly 6s linear infinite;
+}
+
+@keyframes fly {
+  0% {
+    offset-distance: 0%;
+  }
+  100% {
+    offset-distance: 100%;
+  }
+}

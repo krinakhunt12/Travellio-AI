@@ -1,4 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/layout/Navbar";
+import Footer from "../components/layout/Footer";
+import "../styles/colors.css";
 
 const destinations = [
   {
@@ -41,66 +45,99 @@ const destinations = [
 
 function DestinationCard({ d }) {
   return (
-    <div className="relative rounded-2xl overflow-hidden transform transition-transform duration-300 hover:scale-105 shadow-2xl">
+    <div className="relative rounded-2xl overflow-hidden transform transition-transform duration-300 hover:scale-105 shadow-2xl bg-card">
       <img src={d.img} alt={d.name} className="w-full h-48 object-cover" />
-      <div className="p-4 bg-white/10 backdrop-blur-md text-white absolute bottom-0 left-0 right-0 flex items-center justify-between">
+      <div className="p-4 bg-white/90 backdrop-blur-sm text-slate-black absolute bottom-0 left-0 right-0 flex items-center justify-between">
         <div>
-          <div className="text-lg font-semibold">{d.name}</div>
-          <div className="text-sm opacity-80">{d.distance}</div>
+          <div className="text-lg font-semibold" style={{ color: 'var(--color-slate-black)' }}>{d.name}</div>
+          <div className="text-sm opacity-70">{d.distance}</div>
         </div>
-        <div className="bg-white/20 text-white text-xs px-3 py-1 rounded-full">{d.bestMonth}</div>
+        <div className="badge-warm text-xs px-3 py-1 rounded-full font-semibold">{d.bestMonth}</div>
       </div>
     </div>
   );
 }
 
 export default function Home() {
-  return (
-    <div className="min-h-screen font-sans text-gray-900 antialiased">
-      <header className="relative">
-        {/* Hero background */}
-        <div className="relative h-screen w-full overflow-hidden">
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#0b3b61] to-[#0b5f8a]"
-            style={{ filter: "blur(0.6px)" }}
-          />
+  const navigate = useNavigate();
 
+  return (
+    <div className="min-h-screen font-sans antialiased bg-page" style={{ color: 'var(--color-slate-black)' }}>
+      <Navbar />
+      <header className="relative">
+        {/* Hero background with fade */}
+        <div className="relative h-screen w-full overflow-hidden">
+          {/* Hero image */}
           <img
             src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80&auto=format&fit=crop"
             alt="ocean"
-            className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black/15" />
+
+          {/* Bottom fade to white gradient */}
+          <div 
+            className="absolute inset-0" 
+            style={{
+              background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(217,238,249,0.6) 60%, #FFFFFF 100%)'
+            }}
           />
 
           {/* Animated airplane path (SVG) */}
-          <svg className="absolute left-0 top-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-            <path id="flightPath" d="M10 80 C 200 10, 400 120, 800 60" stroke="rgba(255,255,255,0.15)" strokeWidth="2" fill="none" strokeDasharray="6 6" />
-            <circle r="6" fill="#fff" className="plane" />
-            <style>{`\n              .plane{ transform: translate(10px,80px); animation: fly 6s linear infinite; }\n              @keyframes fly{ 0%{ offset-distance:0%; } 100%{ offset-distance:100%; } }\n            `}</style>
+          <svg className="absolute left-0 top-0 w-full h-full pointer-events-none opacity-30" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 80 C 200 10, 400 120, 800 60" stroke="white" strokeWidth="2" fill="none" strokeDasharray="6 6" />
           </svg>
 
           {/* Center glass search card */}
           <div className="absolute inset-0 flex items-center justify-center px-6">
-            <div className="max-w-4xl w-full">
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 p-6 md:p-10 text-white" style={{ boxShadow: '0 8px 30px rgba(2,6,23,0.6)' }}>
-                <h1 className="text-4xl md:text-5xl font-extrabold mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <div className="max-w-4xl w-full animate-fade-in-up">
+              <div 
+                className="rounded-3xl border border-white/30 p-6 md:p-10" 
+                style={{
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  backdropFilter: 'blur(12px)',
+                  boxShadow: '0 8px 32px rgba(15, 23, 42, 0.1)'
+                }}
+              >
+                <h1 className="text-4xl md:text-5xl font-extrabold mb-2 text-slate-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   Plan your perfect getaway
                 </h1>
-                <p className="text-lg opacity-90 mb-6">Smart itineraries and curated experiences powered by AI</p>
+                <p className="text-lg mb-6" style={{ color: 'var(--color-slate-black)', opacity: 0.8 }}>
+                  Smart itineraries and curated experiences powered by AI
+                </p>
 
                 <form className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                   <div>
-                    <label className="text-xs uppercase opacity-80">Destination</label>
-                    <input className="mt-1 w-full rounded-xl p-3 bg-white/10 placeholder-white/60 text-white outline-none" placeholder="Where are you going?" />
+                    <label className="text-xs uppercase opacity-70" style={{ color: 'var(--color-slate-black)' }}>Destination</label>
+                    <input 
+                      className="mt-1 w-full rounded-xl p-3 outline-none bg-search-glass" 
+                      placeholder="Where are you going?" 
+                      style={{ color: 'var(--color-slate-black)' }}
+                    />
                   </div>
                   <div>
-                    <label className="text-xs uppercase opacity-80">Dates</label>
-                    <input className="mt-1 w-full rounded-xl p-3 bg-white/10 placeholder-white/60 text-white outline-none" placeholder="Flexible dates" />
+                    <label className="text-xs uppercase opacity-70" style={{ color: 'var(--color-slate-black)' }}>Dates</label>
+                    <input 
+                      className="mt-1 w-full rounded-xl p-3 outline-none bg-search-glass" 
+                      placeholder="Flexible dates"
+                      style={{ color: 'var(--color-slate-black)' }}
+                    />
                   </div>
                   <div>
-                    <button type="button" className="w-full rounded-xl p-3 bg-white text-blue-800 font-semibold shadow-md">Search</button>
+                    <button 
+                      type="button" 
+                      onClick={() => navigate('/preferences')}
+                      className="w-full rounded-xl p-3 btn-primary font-semibold shadow-md"
+                    >
+                      Search
+                    </button>
                   </div>
                 </form>
-                <div className="mt-4 text-sm opacity-80">Or try: <span className="underline">Bali, Santorini, Maldives</span></div>
+                <div className="mt-4 text-sm opacity-70" style={{ color: 'var(--color-slate-black)' }}>
+                  Or try: <span className="underline text-primary cursor-pointer" onClick={() => navigate('/preferences')}>Bali, Santorini, Maldives</span>
+                </div>
               </div>
             </div>
           </div>
@@ -108,8 +145,10 @@ export default function Home() {
       </header>
 
       <main className="-mt-28 relative z-10 px-6 md:px-12 pb-20">
-        <section className="max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Popular Destinations</h2>
+        <section id="destinations" className="max-w-7xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6" style={{ color: 'var(--color-slate-black)' }}>
+            Popular Destinations
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {destinations.slice(0,6).map((d) => (
               <DestinationCard key={d.name} d={d} />
@@ -117,8 +156,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-12 max-w-7xl mx-auto">
-          <h3 className="text-2xl font-bold mb-6">Why use our AI?</h3>
+        <section className="mt-16 max-w-7xl mx-auto p-8 rounded-2xl" style={{ background: 'linear-gradient(180deg, #FFFFFF 0%, #D9EEF9 100%)' }}>
+          <h3 className="text-2xl font-bold mb-6 text-center" style={{ color: 'var(--color-slate-black)' }}>
+            Why use our AI?
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { title: 'Personalized itineraries', icon: '🧭' },
@@ -126,47 +167,35 @@ export default function Home() {
               { title: 'Local tips & safety', icon: '📌' },
               { title: 'Seamless bookings', icon: '💳' },
             ].map((c) => (
-              <div key={c.title} className="bg-white rounded-xl p-6 shadow-md flex flex-col items-center text-center">
+              <div key={c.title} className="bg-card rounded-xl p-6 flex flex-col items-center text-center">
                 <div className="text-3xl mb-3">{c.icon}</div>
-                <div className="font-semibold">{c.title}</div>
-                <div className="text-sm mt-2 opacity-80">{`Smart ${c.title.toLowerCase()}`}</div>
+                <div className="font-semibold" style={{ color: 'var(--color-slate-black)' }}>{c.title}</div>
+                <div className="text-sm mt-2 opacity-70">{`Smart ${c.title.toLowerCase()}`}</div>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mt-12 max-w-7xl mx-auto">
-          <h3 className="text-2xl font-bold mb-6">What travelers say</h3>
+        <section className="mt-16 max-w-7xl mx-auto">
+          <h3 className="text-2xl font-bold mb-6 text-center" style={{ color: 'var(--color-slate-black)' }}>
+            What travelers say
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { name: 'Sofia L.', text: 'The itinerary was perfect — saved us so much time and uncovered hidden gems.' },
               { name: 'Mark R.', text: 'Beautiful recommendations and smooth booking flow. Highly recommended.' },
               { name: 'Aisha K.', text: 'Lovely designs and spot-on suggestions for food and activities.' },
             ].map((t) => (
-              <div key={t.name} className="bg-white rounded-2xl p-6 shadow-lg">
+              <div key={t.name} className="bg-card rounded-2xl p-6">
                 <div className="text-sm opacity-70 mb-3">"{t.text}"</div>
-                <div className="font-semibold">{t.name}</div>
+                <div className="font-semibold" style={{ color: 'var(--color-ocean-blue)' }}>{t.name}</div>
               </div>
             ))}
           </div>
         </section>
       </main>
 
-      <footer className="mt-10">
-        {/* Wave footer */}
-        <div className="relative bg-gradient-to-t from-[#062a46] to-transparent text-white pt-10">
-          <svg viewBox="0 0 1440 200" className="w-full -mt-1">
-            <path d="M0,64 C200,160 400,0 720,64 C1100,140 1200,80 1440,64 L1440 320 L0 320 Z" fill="#062a46" />
-          </svg>
-          <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between">
-            <div>
-              <div className="text-xl font-bold">Travellio</div>
-              <div className="text-sm opacity-80">Plan smarter trips with AI-curated itineraries</div>
-            </div>
-            <div className="mt-6 md:mt-0 text-sm opacity-80">© {new Date().getFullYear()} Travellio — All rights reserved.</div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

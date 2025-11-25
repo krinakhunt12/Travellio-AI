@@ -9,19 +9,19 @@ import {
 
 export default function Landing() {
   return (
-    <div className="bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white min-h-screen overflow-hidden relative">
-      
+    <div className="gradient-sky text-white min-h-screen overflow-hidden relative">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-sky-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
-        
+        <div className="absolute top-20 left-10 w-72 h-72 glow-sky rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 glow-ocean rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 glow-warm rounded-full blur-3xl animate-pulse" />
+
         {/* Floating Particles */}
         {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-sky-400/30 rounded-full"
+            className="absolute w-1 h-1 rounded-full"
+            style={{ backgroundColor: "rgba(var(--color-sky-blue-rgb), 0.35)" }}
             initial={{ 
               x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000), 
               y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
@@ -47,41 +47,34 @@ export default function Landing() {
           animate={{ opacity: 1, x: 0 }}
           className="text-2xl md:text-3xl font-extrabold tracking-wide"
         >
-          <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+          <span className="text-gradient-sky">
             Travel
           </span>
           <span className="text-white">AI</span>
         </motion.h1>
 
         <nav className="hidden md:flex space-x-8 text-lg">
-          <motion.a 
-            whileHover={{ scale: 1.05, color: "#38bdf8" }}
-            href="#features" 
-            className="hover:text-sky-400 transition-colors"
-          >
-            Features
-          </motion.a>
-          <motion.a 
-            whileHover={{ scale: 1.05, color: "#38bdf8" }}
-            href="#how" 
-            className="hover:text-sky-400 transition-colors"
-          >
-            How it Works
-          </motion.a>
-          <motion.a 
-            whileHover={{ scale: 1.05, color: "#38bdf8" }}
-            href="#about" 
-            className="hover:text-sky-400 transition-colors"
-          >
-            About
-          </motion.a>
+          {[
+            { href: "#features", label: "Features" },
+            { href: "#how", label: "How it Works" },
+            { href: "#about", label: "About" },
+          ].map((link) => (
+            <motion.a 
+              key={link.href}
+              whileHover={{ scale: 1.05, color: "var(--color-sky-blue)" }}
+              href={link.href} 
+              className="hover:text-[var(--color-sky-blue)] transition-colors"
+            >
+              {link.label}
+            </motion.a>
+          ))}
         </nav>
 
         <motion.a
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           href="/preferences"
-          className="px-5 py-2 md:px-6 md:py-3 rounded-xl bg-gradient-to-r from-sky-500 to-purple-500 hover:from-sky-600 hover:to-purple-600 text-base md:text-lg shadow-lg shadow-sky-500/50 font-semibold"
+          className="px-5 py-2 md:px-6 md:py-3 rounded-xl btn-secondary text-base md:text-lg shadow-lg shadow-[rgba(var(--color-coral-orange-rgb),0.4)] font-semibold"
         >
           Start Planning
         </motion.a>
@@ -100,14 +93,14 @@ export default function Landing() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-block px-4 py-2 bg-sky-500/20 border border-sky-500/50 rounded-full text-sm font-semibold text-sky-300 mb-6"
+              className="inline-block px-4 py-2 rounded-full text-sm font-semibold border border-[var(--color-sky-blue)] text-[var(--color-sky-blue)] bg-[rgba(var(--color-sky-blue-rgb),0.15)] mb-6"
             >
               ✨ AI-Powered Travel Planning
             </motion.span>
             
             <h2 className="text-5xl md:text-7xl font-extrabold leading-tight">
               Your{" "}
-              <span className="bg-gradient-to-r from-sky-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent animate-gradient">
+              <span className="text-gradient-sky animate-gradient">
                 Dream Journey
               </span>
               <br />
@@ -119,7 +112,7 @@ export default function Landing() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-lg md:text-xl text-gray-300 max-w-xl leading-relaxed"
+            className="text-lg md:text-xl text-white/85 max-w-xl leading-relaxed"
           >
             Get personalized itineraries, real-time costs, hotel suggestions,
             food budget, local experiences, weather insights, and more — all in seconds.
@@ -132,19 +125,19 @@ export default function Landing() {
             className="flex flex-col sm:flex-row gap-4 mt-8"
           >
             <motion.a
-              whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(56, 189, 248, 0.5)" }}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href="/preferences"
-              className="px-8 py-4 bg-gradient-to-r from-sky-500 to-cyan-500 text-lg rounded-xl hover:from-sky-600 hover:to-cyan-600 shadow-xl shadow-sky-500/30 font-semibold text-center"
+              className="px-8 py-4 rounded-xl btn-primary text-lg shadow-lg shadow-[rgba(var(--color-ocean-blue-rgb),0.4)] font-semibold text-center"
             >
               Plan My Trip 🚀
             </motion.a>
 
             <motion.a
-              whileHover={{ scale: 1.05, backgroundColor: "rgba(14, 116, 144, 0.2)" }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               href="#features"
-              className="px-8 py-4 border-2 border-sky-500 rounded-xl text-lg hover:bg-sky-800/20 backdrop-blur-sm font-semibold text-center"
+              className="px-8 py-4 rounded-xl btn-secondary text-lg font-semibold text-center"
             >
               Explore Features
             </motion.a>
@@ -155,7 +148,7 @@ export default function Landing() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="flex gap-8 mt-12 pt-8 border-t border-white/10"
+            className="flex gap-8 mt-12 pt-8 border-t border-white/15"
           >
             {[
               { num: "10K+", label: "Happy Travelers" },
@@ -163,10 +156,10 @@ export default function Landing() {
               { num: "4.9/5", label: "User Rating" }
             ].map((stat, i) => (
               <div key={i} className="text-center">
-                <p className="text-3xl font-bold bg-gradient-to-r from-sky-400 to-purple-400 bg-clip-text text-transparent">
+                <p className="text-3xl font-bold text-gradient-sunset">
                   {stat.num}
                 </p>
-                <p className="text-sm text-gray-400 mt-1">{stat.label}</p>
+                <p className="text-sm text-white/70 mt-1">{stat.label}</p>
               </div>
             ))}
           </motion.div>
@@ -181,7 +174,7 @@ export default function Landing() {
         >
           <motion.div 
             whileHover={{ scale: 1.02, rotateY: 5 }}
-            className="bg-gradient-to-br from-white/10 to-white/5 p-6 rounded-3xl backdrop-blur-xl shadow-2xl border border-white/20 relative overflow-hidden"
+            className="gradient-ocean-glass p-6 rounded-3xl border border-white/20 relative overflow-hidden"
           >
             {/* Shimmer Effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 animate-shimmer" />
@@ -197,10 +190,10 @@ export default function Landing() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1 }}
-              className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-xl p-4 rounded-xl shadow-xl"
+              className="absolute bottom-8 left-8 right-8 gradient-ocean-glass p-4 rounded-xl shadow-glass border border-white/30 text-[var(--color-deep-navy)]"
             >
-              <p className="text-gray-800 font-semibold">🌴 Bali, Indonesia</p>
-              <p className="text-sm text-gray-600 mt-1">5 Days • $1,200 • Adventure</p>
+              <p className="font-semibold">🌴 Bali, Indonesia</p>
+              <p className="text-sm text-[var(--color-deep-navy)]/70 mt-1">5 Days • $1,200 • Adventure</p>
             </motion.div>
           </motion.div>
 
@@ -208,7 +201,7 @@ export default function Landing() {
           <motion.div
             animate={{ y: [0, -15, 0], rotate: [0, 5, 0] }}
             transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-            className="absolute -top-6 -right-6 bg-gradient-to-br from-sky-500 to-cyan-500 p-5 rounded-2xl shadow-2xl shadow-sky-500/50"
+            className="absolute -top-6 -right-6 bg-gradient-to-br from-[var(--color-sky-blue)] to-[var(--color-ocean-blue)] p-5 rounded-2xl shadow-2xl shadow-[rgba(var(--color-ocean-blue-rgb),0.35)]"
           >
             <RocketLaunchIcon className="w-10 h-10" />
           </motion.div>
@@ -216,7 +209,7 @@ export default function Landing() {
           <motion.div
             animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
             transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-            className="absolute -bottom-6 -left-6 bg-gradient-to-br from-purple-500 to-pink-500 p-5 rounded-2xl shadow-2xl shadow-purple-500/50"
+            className="absolute -bottom-6 -left-6 bg-gradient-to-br from-[var(--color-sunset-yellow)] to-[var(--color-coral-orange)] p-5 rounded-2xl shadow-2xl shadow-[rgba(var(--color-coral-orange-rgb),0.35)]"
           >
             <MapIcon className="w-10 h-10" />
           </motion.div>
@@ -224,7 +217,7 @@ export default function Landing() {
           <motion.div
             animate={{ scale: [1, 1.1, 1], opacity: [0.5, 1, 0.5] }}
             transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-            className="absolute top-1/2 -right-4 bg-gradient-to-br from-yellow-400 to-orange-500 p-4 rounded-full shadow-xl shadow-yellow-500/50"
+            className="absolute top-1/2 -right-4 bg-gradient-to-br from-[var(--color-sunset-yellow)] to-[var(--color-coral-orange)] p-4 rounded-full shadow-xl shadow-[rgba(var(--color-sunset-yellow-rgb),0.4)]"
           >
             <SparklesIcon className="w-8 h-8" />
           </motion.div>
@@ -240,11 +233,7 @@ export default function Landing() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Why Choose{" "}
-            <span className="bg-gradient-to-r from-sky-400 to-purple-400 bg-clip-text text-transparent">
-              TravelAI
-            </span>
-            ?
+            Why Choose <span className="text-gradient-sky">TravelAI</span>?
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Experience the future of travel planning with AI-powered insights
@@ -257,19 +246,19 @@ export default function Landing() {
               icon: <SparklesIcon className="w-12 h-12" />,
               title: "AI-Generated Itineraries",
               desc: "Get day-by-day plans fully customized to your tastes & budget.",
-              gradient: "from-sky-500 to-cyan-500"
+              gradient: "from-[var(--color-sky-blue)] to-[var(--color-ocean-blue)]"
             },
             {
               icon: <GlobeAsiaAustraliaIcon className="w-12 h-12" />,
               title: "Global Travel Data",
               desc: "Ticket prices, food cost, hotels, activities — everything in one place.",
-              gradient: "from-purple-500 to-pink-500"
+              gradient: "from-[var(--color-ocean-blue)] to-[var(--color-deep-navy)]"
             },
             {
               icon: <RocketLaunchIcon className="w-12 h-12" />,
               title: "Lightning Fast",
               desc: "Generate a full travel plan in under 10 seconds.",
-              gradient: "from-orange-500 to-yellow-500"
+              gradient: "from-[var(--color-sunset-yellow)] to-[var(--color-coral-orange)]"
             },
           ].map((f, i) => (
             <motion.div
@@ -281,9 +270,9 @@ export default function Landing() {
               whileHover={{ 
                 scale: 1.05, 
                 y: -10,
-                boxShadow: "0 20px 60px rgba(56, 189, 248, 0.3)"
+                boxShadow: "0 20px 60px rgba(var(--color-sky-blue-rgb), 0.3)"
               }}
-              className="group p-8 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl border border-white/20 shadow-xl backdrop-blur-xl space-y-4 relative overflow-hidden"
+              className="group p-8 gradient-ocean-glass rounded-2xl border border-white/20 shadow-glass space-y-4 relative overflow-hidden text-[var(--color-deep-navy)]"
             >
               {/* Hover Glow Effect */}
               <div className={`absolute inset-0 bg-gradient-to-br ${f.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
@@ -295,8 +284,8 @@ export default function Landing() {
               >
                 {f.icon}
               </motion.div>
-              <h3 className="text-2xl font-bold">{f.title}</h3>
-              <p className="text-gray-300">{f.desc}</p>
+              <h3 className="text-2xl font-bold text-[var(--color-deep-navy)]">{f.title}</h3>
+              <p className="text-[var(--color-deep-navy)]/75">{f.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -311,14 +300,14 @@ export default function Landing() {
           className="text-4xl md:text-5xl font-bold text-center mb-16"
         >
           How it{" "}
-          <span className="bg-gradient-to-r from-sky-400 to-purple-400 bg-clip-text text-transparent">
+          <span className="text-gradient-sky">
             Works
           </span>
         </motion.h2>
 
         <div className="grid md:grid-cols-3 gap-12 relative">
           {/* Connecting Line */}
-          <div className="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-sky-500 via-purple-500 to-pink-500 -z-10 opacity-20" />
+          <div className="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-[var(--color-ocean-blue)] via-[var(--color-sky-blue)] to-[var(--color-sunset-yellow)] -z-10 opacity-30" />
           
           {[
             {
@@ -326,21 +315,21 @@ export default function Landing() {
               title: "Enter Preferences",
               desc: "Destination, dates, budget, interests, and comfort level.",
               icon: "📝",
-              color: "from-sky-500 to-cyan-500"
+              color: "from-[var(--color-sky-blue)] to-[var(--color-ocean-blue)]"
             },
             {
               step: "02",
               title: "AI Generates Plan",
               desc: "Hotels, food, itinerary, attractions, pocket money, and weather.",
               icon: "🤖",
-              color: "from-purple-500 to-pink-500"
+              color: "from-[var(--color-ocean-blue)] to-[var(--color-deep-navy)]"
             },
             {
               step: "03",
               title: "Download & Travel",
               desc: "Instant printable PDF with all details included.",
               icon: "✈️",
-              color: "from-orange-500 to-yellow-500"
+              color: "from-[var(--color-sunset-yellow)] to-[var(--color-coral-orange)]"
             },
           ].map((s, i) => (
             <motion.div
@@ -350,7 +339,7 @@ export default function Landing() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.2 }}
               whileHover={{ y: -10, scale: 1.02 }}
-              className="relative p-8 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl border border-white/10 shadow-xl backdrop-blur-sm group"
+              className="relative p-8 gradient-ocean-glass rounded-2xl border border-white/15 shadow-glass group text-[var(--color-deep-navy)]"
             >
               {/* Step Number Badge */}
               <div className={`absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-gradient-to-br ${s.color} flex items-center justify-center font-bold text-white shadow-lg`}>
@@ -362,7 +351,7 @@ export default function Landing() {
               </div>
               
               <h3 className="text-2xl font-bold mt-4 text-center">{s.title}</h3>
-              <p className="text-gray-300 mt-2 text-center leading-relaxed">{s.desc}</p>
+              <p className="text-[var(--color-deep-navy)]/75 mt-2 text-center leading-relaxed">{s.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -374,10 +363,10 @@ export default function Landing() {
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto bg-gradient-to-r from-sky-500/20 via-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-3xl p-12 border border-white/20 text-center relative overflow-hidden"
+          className="max-w-4xl mx-auto gradient-ocean-glass rounded-3xl p-12 border border-white/30 text-center relative overflow-hidden text-[var(--color-deep-navy)]"
         >
           {/* Animated Background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-sky-500/10 via-purple-500/10 to-pink-500/10 animate-gradient" />
+          <div className="absolute inset-0 gradient-sky opacity-20 animate-gradient" />
           
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
@@ -393,7 +382,7 @@ export default function Landing() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto relative z-10"
+            className="text-xl text-[var(--color-deep-navy)]/80 mb-8 max-w-2xl mx-auto relative z-10"
           >
             Join thousands of travelers who trust TravelAI to plan their perfect journey
           </motion.p>
@@ -403,10 +392,10 @@ export default function Landing() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(56, 189, 248, 0.6)" }}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             href="/preferences"
-            className="relative z-10 inline-block px-10 py-5 bg-gradient-to-r from-sky-500 to-purple-500 text-xl rounded-xl font-bold shadow-2xl shadow-sky-500/50"
+            className="relative z-10 inline-block px-10 py-5 btn-secondary text-xl rounded-xl font-bold shadow-xl shadow-[rgba(var(--color-coral-orange-rgb),0.4)]"
           >
             Start Planning Now 🎉
           </motion.a>
@@ -414,14 +403,16 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 text-center text-gray-400 py-10 border-t border-white/10 backdrop-blur-sm">
+      <footer className="relative z-10 text-center text-white/70 py-10 border-t border-white/20 backdrop-blur-sm">
         <p className="text-lg">
-          © 2025 TravelAI — Designed with ❤️ for travelers
+          © 2025 TravelAI — Designed for wanderers
         </p>
         <div className="flex justify-center gap-6 mt-4">
-          <a href="#" className="hover:text-sky-400 transition-colors">Privacy</a>
-          <a href="#" className="hover:text-sky-400 transition-colors">Terms</a>
-          <a href="#" className="hover:text-sky-400 transition-colors">Contact</a>
+          {["Privacy", "Terms", "Contact"].map((item) => (
+            <a key={item} href="#" className="hover:text-[var(--color-sky-blue)] transition-colors">
+              {item}
+            </a>
+          ))}
         </div>
       </footer>
     </div>

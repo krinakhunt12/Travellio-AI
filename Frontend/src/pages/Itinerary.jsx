@@ -1,203 +1,132 @@
 import React from "react";
-import { motion } from "framer-motion";
-import {
-  CalendarDaysIcon,
-  CloudIcon,
-  BanknotesIcon,
-  MapIcon,
-  BuildingOffice2Icon,
-  ShieldCheckIcon,
-  BriefcaseIcon,
-} from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/layout/Navbar";
+import Footer from "../components/layout/Footer";
 
-export default function Itinerary() {
-  const data = JSON.parse(localStorage.getItem("aiItinerary"));
+const itinerary = [
+  {
+    day: 1,
+    title: "Arrival & Beach Sunset",
+    activities: [
+      { time: "Morning", icon: "✈️", title: "Arrive at Ngurah Rai Airport", description: "Pick up rental car" },
+      { time: "Afternoon", icon: "🏨", title: "Check-in at Seminyak Resort", description: "Relax by the pool" },
+      { time: "Evening", icon: "🌅", title: "Seminyak Beach Sunset", description: "Watch the sunset with dinner" },
+    ],
+  },
+  {
+    day: 2,
+    title: "Cultural Exploration",
+    activities: [
+      { time: "Morning", icon: "🛕", title: "Tanah Lot Temple", description: "Visit ancient sea temple" },
+      { time: "Afternoon", icon: "🍜", title: "Local Warung Lunch", description: "Try authentic Nasi Goreng" },
+      { time: "Evening", icon: "🎭", title: "Ubud Traditional Dance", description: "Kecak fire dance performance" },
+    ],
+  },
+  {
+    day: 3,
+    title: "Adventure Day",
+    activities: [
+      { time: "Morning", icon: "🌾", title: "Tegallalang Rice Terraces", description: "Sunrise photo walk" },
+      { time: "Afternoon", icon: "🏄", title: "Surfing Lesson", description: "Learn to surf at Kuta Beach" },
+      { time: "Evening", icon: "🍹", title: "Beach Club", description: "Relax at Potato Head" },
+    ],
+  },
+];
 
-  if (!data) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-white bg-[#0F172A]">
-        <p className="text-xl">No itinerary found. Please generate a new one.</p>
-      </div>
-    );
-  }
-
-  // Card Animation
-  const fadeUp = (delay = 0) => ({
-    initial: { opacity: 0, y: 40 },
-    animate: { opacity: 1, y: 0 },
-    transition: { delay, duration: 0.6 },
-  });
+export default function ItineraryPage() {
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-white py-12 px-6">
-      <div className="max-w-4xl mx-auto space-y-12">
+    <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #D9EEF9 100%)" }}>
+      <Navbar />
 
-        {/* HEADER */}
-        <motion.h1
-          {...fadeUp(0)}
-          className="text-5xl font-extrabold text-center"
-        >
-          Your Trip Plan ✈️
-        </motion.h1>
+      <div className="relative overflow-hidden">
+        {/* subtle cloud texture at top */}
+        <svg className="absolute -top-10 left-0 w-full opacity-30 pointer-events-none" viewBox="0 0 1440 140" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+              <stop offset="100%" stopColor="#D9EEF9" stopOpacity="1" />
+            </linearGradient>
+          </defs>
+          <path d="M0 60 C200 10 400 10 600 60 C800 110 1000 110 1200 60 C1300 30 1400 30 1440 50 L1440 0 L0 0 Z" fill="url(#g)" />
+        </svg>
 
-        {/* TRIP SUMMARY */}
-        <motion.section
-          {...fadeUp(0.1)}
-          className="glass-card p-6 rounded-3xl"
-        >
-          <h2 className="section-title">Trip Summary</h2>
-          <p className="text-gray-200 leading-relaxed">{data.trip_summary}</p>
-        </motion.section>
+        <div className="pt-24 pb-16 px-6">
+          <div className="max-w-6xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-2 text-center" style={{ fontFamily: "Poppins, sans-serif", color: "#0F172A" }}>
+              Your Personalized Itinerary
+            </h1>
+            <p className="text-center text-gray-600 mb-12">Day-by-day plan for an unforgettable journey</p>
 
-        {/* BEST TIME */}
-        <motion.section {...fadeUp(0.15)} className="glass-card p-6 rounded-3xl">
-          <h2 className="section-title flex items-center gap-2">
-            <CalendarDaysIcon className="w-7 h-7 text-yellow-300" />
-            Best Time to Visit
-          </h2>
-          <p className="text-gray-200">{data.best_time}</p>
-        </motion.section>
+            {/* Timeline wrapper */}
+            <div className="relative">
+              {/* vertical timeline line */}
+              <div className="hidden md:block absolute left-20 top-0 bottom-0 w-0.5" style={{ background: '#90D3F8', opacity: 0.9 }} />
 
-        {/* WEATHER */}
-        <motion.section {...fadeUp(0.2)} className="glass-card p-6 rounded-3xl">
-          <h2 className="section-title flex items-center gap-2">
-            <CloudIcon className="w-7 h-7 text-blue-300" />
-            Weather
-          </h2>
-          <p className="text-gray-200">{data.weather}</p>
-        </motion.section>
-
-        {/* DAY-WISE ITINERARY */}
-        <motion.section {...fadeUp(0.25)}>
-          <h2 className="section-title">Day-wise Itinerary</h2>
-
-          <div className="space-y-6">
-            {data.daywise_itinerary.map((day, index) => (
-              <motion.div
-                key={day.day}
-                {...fadeUp(0.15 * index)}
-                className="glass-card p-6 rounded-3xl"
-              >
-                <h3 className="text-2xl font-bold mb-3">Day {day.day} – {day.title}</h3>
-
-                <div className="space-y-4">
-                  {["morning", "afternoon", "evening"].map((time) => (
-                    <div
-                      key={time}
-                      className="bg-white/5 p-4 rounded-xl border border-white/10"
-                    >
-                      <p className="text-lg font-semibold capitalize text-sky-300">
-                        {time}
-                      </p>
-                      <p className="text-gray-200 font-bold">{day[time].place}</p>
-                      <p className="text-gray-300 text-sm mt-1">{day[time].desc}</p>
-                      <p className="text-gray-400 text-xs mt-1">
-                        🎫 Ticket: {day[time].ticket} | ⏱ {day[time].duration}
-                      </p>
+              <div className="space-y-12">
+                {itinerary.map((day) => (
+                  <div key={day.day} className="relative md:flex md:items-start md:gap-8">
+                    {/* Day badge */}
+                    <div className="md:shrink-0 md:w-48 md:flex md:items-center">
+                      <div className="flex items-center md:justify-end">
+                        <div className="w-20 h-20 rounded-full flex items-center justify-center font-bold text-white text-2xl md:mr-6"
+                          style={{ background: 'linear-gradient(135deg, #6BBFF1, #2C74B3)' }}>
+                          {day.day}
+                        </div>
+                        <div className="hidden md:block text-left">
+                          <div className="text-sm text-gray-500">Day {day.day}</div>
+                          <div className="text-xl font-semibold" style={{ color: '#0F172A' }}>{day.title}</div>
+                        </div>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
 
-        {/* HOTEL RECOMMENDATIONS */}
-        <motion.section {...fadeUp(0.3)} className="glass-card p-6 rounded-3xl">
-          <h2 className="section-title flex items-center gap-2">
-            <BuildingOffice2Icon className="w-7 h-7 text-green-300" />
-            Hotel Recommendations
-          </h2>
+                    {/* Activities column */}
+                    <div className="mt-6 md:mt-0 md:flex-1 md:pl-8">
+                      <div className="space-y-6">
+                        {day.activities.map((activity, idx) => (
+                          <div key={idx} className="relative">
+                            {/* node on the timeline */}
+                            <div className="absolute -left-10 md:left-6 top-6 w-4 h-4 rounded-full" style={{ background: 'linear-gradient(135deg,#6BBFF1,#2C74B3)', boxShadow: '0 4px 14px rgba(43,140,215,0.12)' }} />
 
-          {["budget", "mid", "luxury"].map((type) => (
-            <div key={type} className="mb-6">
-              <p className="text-xl font-semibold capitalize text-sky-300 mb-2">
-                {type} stays
-              </p>
-
-              <div className="space-y-2">
-                {data.hotels[type].map((hotel, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white/5 p-3 rounded-xl border border-white/10"
-                  >
-                    <p className="font-bold">{hotel.name}</p>
-                    <p className="text-gray-300 text-sm">{hotel.price}</p>
+                            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-md transition-transform duration-300 hover:scale-105"
+                              style={{ boxShadow: '0 4px 16px rgba(15, 23, 42, 0.08)' }}>
+                              <div className="flex items-start gap-4">
+                                <div className="text-4xl flex-shrink-0">{activity.icon}</div>
+                                <div className="flex-1">
+                                  <div className="text-xs text-gray-500 uppercase mb-1">{activity.time}</div>
+                                  <div className="text-lg font-semibold" style={{ color: '#0F172A' }}>{activity.title}</div>
+                                  <div className="text-sm text-gray-600 mt-2">{activity.description}</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-          ))}
-        </motion.section>
 
-        {/* TRANSPORT COST */}
-        <motion.section {...fadeUp(0.35)} className="glass-card p-6 rounded-3xl">
-          <h2 className="section-title flex items-center gap-2">
-            <MapIcon className="w-7 h-7 text-purple-300" />
-            Transport Cost
-          </h2>
-          <p className="text-gray-200 mb-2">✈️ {data.transport.flight_cost}</p>
-          <p className="text-gray-200">🚕 {data.transport.local_transport}</p>
-        </motion.section>
-
-        {/* FOOD COST */}
-        <motion.section {...fadeUp(0.4)} className="glass-card p-6 rounded-3xl">
-          <h2 className="section-title">Food Cost</h2>
-          <p className="text-gray-200">{data.food_cost}</p>
-        </motion.section>
-
-        {/* POCKET MONEY */}
-        <motion.section {...fadeUp(0.45)} className="glass-card p-6 rounded-3xl">
-          <h2 className="section-title">Pocket Money</h2>
-          <p className="text-gray-200">{data.pocket_money}</p>
-        </motion.section>
-
-        {/* TOTAL BUDGET BREAKDOWN */}
-        <motion.section {...fadeUp(0.5)} className="glass-card p-6 rounded-3xl">
-          <h2 className="section-title flex items-center gap-2">
-            <BanknotesIcon className="w-7 h-7 text-yellow-400" />
-            Total Budget Breakdown
-          </h2>
-
-          <div className="mt-4 space-y-3">
-            {data.total_estimate.breakdown.map((item, idx) => (
-              <div
-                key={idx}
-                className="flex justify-between bg-white/5 p-3 rounded-xl border border-white/10"
+            {/* CTA */}
+            <div className="text-center mt-12">
+              <button
+                onClick={() => navigate("/hotels")}
+                className="px-10 py-4 rounded-2xl font-semibold text-white text-lg transition-transform transform hover:scale-105"
+                style={{
+                  background: "linear-gradient(135deg, #6BBFF1, #2C74B3)",
+                  boxShadow: "0 8px 20px rgba(44, 116, 179, 0.3)",
+                }}
               >
-                <p className="font-semibold">{item.item}</p>
-                <p className="text-green-300 font-bold">{item.cost}</p>
-              </div>
-            ))}
+                Browse Hotels →
+              </button>
+            </div>
           </div>
-
-          <p className="text-2xl font-bold text-center mt-5 text-yellow-300">
-            Total: {data.total_estimate.total}
-          </p>
-        </motion.section>
-
-        {/* SAFETY TIPS */}
-        <motion.section {...fadeUp(0.55)} className="glass-card p-6 rounded-3xl">
-          <h2 className="section-title flex items-center gap-2">
-            <ShieldCheckIcon className="w-7 h-7 text-red-300" />
-            Safety Tips
-          </h2>
-          <pre className="text-gray-200 whitespace-pre-wrap">{data.tips}</pre>
-        </motion.section>
-
-        {/* PACKING LIST */}
-        <motion.section {...fadeUp(0.6)} className="glass-card p-6 rounded-3xl">
-          <h2 className="section-title flex items-center gap-2">
-            <BriefcaseIcon className="w-7 h-7 text-orange-300" />
-            Packing List
-          </h2>
-          <pre className="text-gray-200 whitespace-pre-wrap">{data.packing_list}</pre>
-        </motion.section>
-
+        </div>
       </div>
+
+      <Footer />
     </div>
   );
 }
-
-/* Utility Class (Paste this in your global CSS or Tailwind config)
---------------------------------------------------------------- */

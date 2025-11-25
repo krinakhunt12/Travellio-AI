@@ -76,7 +76,7 @@ export default function Itinerary() {
 
   if (!data) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white bg-[#0F172A]">
+      <div className="min-h-screen flex items-center justify-center text-white bg-[var(--color-deep-navy)]">
         <p className="text-xl">No itinerary found. Please generate a new one.</p>
       </div>
     );
@@ -90,7 +90,7 @@ export default function Itinerary() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-white py-12 px-6">
+    <div className="min-h-screen bg-[var(--color-deep-navy)] text-white py-12 px-6">
       <div className="max-w-4xl mx-auto space-y-12">
 
         {/* HEADER */}
@@ -113,7 +113,7 @@ export default function Itinerary() {
         {/* BEST TIME */}
         <motion.section {...fadeUp(0.15)} className="glass-card p-6 rounded-3xl">
           <h2 className="section-title flex items-center gap-2">
-            <CalendarDaysIcon className="w-7 h-7 text-yellow-300" />
+            <CalendarDaysIcon className="w-7 h-7 text-[var(--color-sunset-yellow)]" />
             Best Time to Visit
           </h2>
           <p className="text-gray-200">{data.best_time}</p>
@@ -122,7 +122,7 @@ export default function Itinerary() {
         {/* WEATHER */}
         <motion.section {...fadeUp(0.2)} className="glass-card p-6 rounded-3xl">
           <h2 className="section-title flex items-center gap-2">
-            <CloudIcon className="w-7 h-7 text-blue-300" />
+            <CloudIcon className="w-7 h-7 text-[var(--color-sky-blue)]" />
             Weather
           </h2>
           <p className="text-gray-200">{data.weather}</p>
@@ -147,7 +147,7 @@ export default function Itinerary() {
                       key={time}
                       className="bg-white/5 p-4 rounded-xl border border-white/10"
                     >
-                      <p className="text-lg font-semibold capitalize text-sky-300">
+                      <p className="text-lg font-semibold capitalize text-[var(--color-sky-blue)]">
                         {time}
                       </p>
                       <p className="text-gray-200 font-bold">{day[time].place}</p>
@@ -172,7 +172,7 @@ export default function Itinerary() {
 
           {["budget", "mid", "luxury"].map((type) => (
             <div key={type} className="mb-6">
-              <p className="text-xl font-semibold capitalize text-sky-300 mb-2">
+              <p className="text-xl font-semibold capitalize text-[var(--color-sky-blue)] mb-2">
                 {type} stays
               </p>
 
@@ -216,7 +216,7 @@ export default function Itinerary() {
         {/* TOTAL BUDGET BREAKDOWN */}
         <motion.section {...fadeUp(0.5)} className="glass-card p-6 rounded-3xl">
           <h2 className="section-title flex items-center gap-2">
-            <BanknotesIcon className="w-7 h-7 text-yellow-400" />
+            <BanknotesIcon className="w-7 h-7 text-[var(--color-sunset-yellow)]" />
             Total Budget Breakdown
           </h2>
 
@@ -227,12 +227,12 @@ export default function Itinerary() {
                 className="flex justify-between bg-white/5 p-3 rounded-xl border border-white/10"
               >
                 <p className="font-semibold">{item.item}</p>
-                <p className="text-green-300 font-bold">{item.cost}</p>
+                <p className="text-[var(--color-ocean-blue)] font-bold">{item.cost}</p>
               </div>
             ))}
           </div>
 
-          <p className="text-2xl font-bold text-center mt-5 text-yellow-300">
+          <p className="text-2xl font-bold text-center mt-5 text-[var(--color-sunset-yellow)]">
             Total: {data.total_estimate.total}
           </p>
         </motion.section>
@@ -240,7 +240,7 @@ export default function Itinerary() {
         {/* SAFETY TIPS */}
         <motion.section {...fadeUp(0.55)} className="glass-card p-6 rounded-3xl">
           <h2 className="section-title flex items-center gap-2">
-            <ShieldCheckIcon className="w-7 h-7 text-red-300" />
+            <ShieldCheckIcon className="w-7 h-7 text-[var(--color-coral-orange)]" />
             Safety Tips
           </h2>
           <pre className="text-gray-200 whitespace-pre-wrap">{data.tips}</pre>
@@ -249,7 +249,7 @@ export default function Itinerary() {
         {/* PACKING LIST */}
         <motion.section {...fadeUp(0.6)} className="glass-card p-6 rounded-3xl">
           <h2 className="section-title flex items-center gap-2">
-            <BriefcaseIcon className="w-7 h-7 text-orange-300" />
+            <BriefcaseIcon className="w-7 h-7 text-[var(--color-coral-orange)]" />
             Packing List
           </h2>
           <pre className="text-gray-200 whitespace-pre-wrap">{data.packing_list}</pre>

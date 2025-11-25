@@ -23,14 +23,14 @@ export default function Loading() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white flex flex-col items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--color-deep-navy)] via-[var(--color-ocean-blue)] to-[var(--color-deep-navy)] text-white flex flex-col items-center justify-center relative overflow-hidden">
       
       {/* Animated Background Particles */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 bg-sky-400/20 rounded-full"
+            className="absolute w-2 h-2 bg-[rgba(var(--color-sky-blue-rgb),0.2)] rounded-full"
             initial={{ 
               x: Math.random() * window.innerWidth, 
               y: Math.random() * window.innerHeight,
@@ -71,7 +71,7 @@ export default function Loading() {
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="absolute inset-0 w-40 h-40 bg-sky-500/20 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+            className="absolute inset-0 w-40 h-40 bg-[rgba(var(--color-sky-blue-rgb),0.2)] rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
           />
           
           {/* Multiple Spinning Rings */}
@@ -80,21 +80,21 @@ export default function Loading() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
-              className="absolute w-40 h-40 border-4 border-sky-500/40 border-t-sky-400 rounded-full"
+            className="absolute w-40 h-40 border-4 border-[rgba(var(--color-sky-blue-rgb),0.4)] border-t-[var(--color-sky-blue)] rounded-full"
             />
             
             {/* Middle Ring */}
             <motion.div
               animate={{ rotate: -360 }}
               transition={{ repeat: Infinity, duration: 2.5, ease: "linear" }}
-              className="absolute w-28 h-28 border-4 border-purple-500/40 border-t-purple-400 rounded-full"
+            className="absolute w-28 h-28 border-4 border-[rgba(var(--color-sunset-yellow-rgb),0.4)] border-t-[var(--color-sunset-yellow)] rounded-full"
             />
             
             {/* Inner Ring */}
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-              className="absolute w-16 h-16 border-4 border-cyan-500/40 border-t-cyan-400 rounded-full"
+            className="absolute w-16 h-16 border-4 border-[rgba(var(--color-ocean-blue-rgb),0.4)] border-t-[var(--color-ocean-blue)] rounded-full"
             />
             
             {/* Center Icon */}
@@ -122,7 +122,7 @@ export default function Loading() {
           transition={{ delay: 0.4, duration: 0.8 }}
           className="text-center max-w-lg px-6"
         >
-          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-sky-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-[var(--color-sky-blue)] via-[var(--color-ocean-blue)] to-[var(--color-sunset-yellow)] bg-clip-text text-transparent">
             Crafting Your Dream Journey
           </h2>
           
@@ -148,7 +148,7 @@ export default function Loading() {
                   repeat: Infinity,
                   delay: i * 0.2
                 }}
-                className="w-3 h-3 bg-sky-400 rounded-full"
+                className="w-3 h-3 bg-[var(--color-sky-blue)] rounded-full"
               />
             ))}
           </div>

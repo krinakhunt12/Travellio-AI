@@ -1,16 +1,234 @@
 @import "tailwindcss";
 
+:root {
+  /* Brand blues */
+  --color-ocean-blue: #2C74B3;
+  --color-ocean-blue-rgb: 44, 116, 179;
+  --color-sky-blue: #6BBFF1;
+  --color-sky-blue-rgb: 107, 191, 241;
+  --color-deep-navy: #0F172A;
+  --color-deep-navy-rgb: 15, 23, 42;
+  --color-primary-hover: #21619A;
+
+  /* Warm accents */
+  --color-sunset-yellow: #FFD37E;
+  --color-sunset-yellow-rgb: 255, 211, 126;
+  --color-coral-orange: #FF8E72;
+  --color-coral-orange-rgb: 255, 142, 114;
+
+  /* Neutrals */
+  --color-soft-white: #F8FAFC;
+  --color-cool-gray: #E2E8F0;
+  --color-slate-black: #0F172A;
+  --color-blue-gray: #94A3B8;
+
+  /* Utility */
+  --shadow-glass: 0 20px 60px rgba(var(--color-deep-navy-rgb), 0.25);
+}
+
+body {
+  font-family: "Inter", "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: var(--color-soft-white);
+  color: var(--color-slate-black);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Poppins", "Outfit", "Inter", sans-serif;
+  font-weight: 600;
+  color: var(--color-slate-black);
+}
+
+.text-heading {
+  font-family: "Poppins", "Outfit", "Inter", sans-serif;
+  font-weight: 600;
+}
+
+.text-body-strong {
+  font-family: "Inter", "DM Sans", sans-serif;
+  font-weight: 500;
+}
+
+/* Brand utility classes */
+.bg-primary {
+  background-color: var(--color-ocean-blue);
+}
+
+.bg-primary-dark {
+  background-color: var(--color-deep-navy);
+}
+
+.text-primary {
+  color: var(--color-ocean-blue);
+}
+
+.text-accent-warm {
+  color: var(--color-coral-orange);
+}
+
+.border-light {
+  border-color: var(--color-cool-gray);
+}
+
+.btn-primary {
+  background-color: var(--color-ocean-blue);
+  color: white;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--color-sunset-yellow), var(--color-coral-orange));
+  color: var(--color-slate-black);
+  transition: transform 200ms ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1px) scale(1.01);
+}
+
+.gradient-sky {
+  background: linear-gradient(135deg, var(--color-sky-blue) 0%, var(--color-ocean-blue) 100%);
+}
+
+.gradient-sunset {
+  background: linear-gradient(135deg, var(--color-sunset-yellow) 0%, var(--color-coral-orange) 100%);
+}
+
+.gradient-ocean-glass {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3));
+  backdrop-filter: blur(20px);
+}
+
+.text-gradient-sky {
+  background: linear-gradient(120deg, var(--color-sky-blue), var(--color-ocean-blue));
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-sunset {
+  background: linear-gradient(120deg, var(--color-sunset-yellow), var(--color-coral-orange));
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
 .glass-card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3));
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-glass);
 }
 
 .section-title {
   font-size: 1.8rem;
   font-weight: 800;
   margin-bottom: 12px;
+}
+
+.icon-active {
+  color: var(--color-sky-blue);
+}
+
+.strip-day-1 {
+  background-color: rgba(var(--color-sky-blue-rgb), 0.15);
+}
+
+.strip-day-2 {
+  background-color: rgba(var(--color-sunset-yellow-rgb), 0.15);
+}
+
+.strip-day-3 {
+  background-color: rgba(var(--color-coral-orange-rgb), 0.15);
+}
+
+.glow-sky {
+  background-color: rgba(var(--color-sky-blue-rgb), 0.12);
+}
+
+.glow-ocean {
+  background-color: rgba(var(--color-ocean-blue-rgb), 0.12);
+}
+
+.glow-warm {
+  background-color: rgba(var(--color-coral-orange-rgb), 0.18);
+}
+
+.bg-page {
+  background-color: var(--color-soft-white);
+}
+
+.bg-card {
+  background-color: white;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.bg-border {
+  border-color: var(--color-cool-gray);
+}
+
+.bg-divider {
+  background-color: var(--color-cool-gray);
+}
+
+.bg-search-glass {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(18px);
+}
+
+.bg-hero {
+  background: linear-gradient(135deg, var(--color-sky-blue) 0%, var(--color-ocean-blue) 100%);
+}
+
+.badge-warm {
+  background-color: var(--color-sunset-yellow);
+  color: var(--color-deep-navy);
+}
+
+.badge-coral {
+  background-color: var(--color-coral-orange);
+  color: var(--color-deep-navy);
+}
+
+.shadow-glass {
+  box-shadow: var(--shadow-glass);
+}
+
+.chart-color-hotels {
+  color: var(--color-ocean-blue);
+}
+
+.chart-color-food {
+  color: var(--color-coral-orange);
+}
+
+.chart-color-transport {
+  color: var(--color-sky-blue);
+}
+
+.chart-color-activities {
+  color: var(--color-sunset-yellow);
+}
+
+.chart-color-pocket {
+  color: var(--color-blue-gray);
+}
+
+.gradient-divider {
+  background: linear-gradient(
+    90deg,
+    var(--color-ocean-blue),
+    var(--color-sky-blue),
+    var(--color-sunset-yellow),
+    var(--color-coral-orange)
+  );
+  height: 1px;
+  opacity: 0.4;
 }
 
 /* Custom Animations */

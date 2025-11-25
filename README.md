@@ -1,6 +1,31 @@
 # Travellio-AI (Travel Planner)
 
-A small travel planning project that finds attractions, food, shopping and enriches them with AI-powered descriptions. Uses Geoapify (places + geocoding), Unsplash (images), and Gemini (Google Generative AI) for enrichment.
+A modern AI-powered travel planning website with premium UI/UX. Features full itinerary generation, hotel recommendations, cost breakdowns, and PDF export.
+
+---
+
+## 🎨 Design Features
+
+- **Premium travel aesthetic** with ocean blue gradients and glassmorphism
+- **Scroll-aware navbar** (transparent → white)
+- **Hero section** with image fade (transparent → sky → white)
+- **Multi-step form** with progress bar and pill-style interest selection
+- **Day-by-day itinerary** with vertical timeline layout
+- **Hotel cards** with luxury UI and filters sidebar
+- **Cost breakdown** with charts and totals
+- **PDF export** with A4 layout and watermark
+
+---
+
+**Complete Page Flow:**
+
+1. **Home** → Hero + Popular Destinations + Why AI + Testimonials
+2. **Preferences** → 4-step form (Destination, Travelers, Budget, Interests)
+3. **Trip Summary** → Banner + City Overview + Weather + Quick Stats
+4. **Itinerary** → Day-by-day timeline with morning/afternoon/evening activities
+5. **Hotels** → Luxury cards with filters sidebar
+6. **Cost Breakdown** → Pie/bar charts + totals
+7. **PDF** → Printable A4 itinerary
 
 ---
 
@@ -43,18 +68,18 @@ Security note: Do NOT commit `.env` or any API keys. The repo already contains `
 
 ## Install dependencies
 
-Install backend dependencies:
+**Backend:**
 
 ```powershell
-cd "D:\Aksa main\Krina\Travel Planner\backend"
+cd backend
 npm install
 ```
 
-Install frontend dependencies:
+**Frontend:**
 
 ```powershell
-cd "D:\Aksa main\Krina\Travel Planner\Frontend"
-npm install
+cd Frontend
+npm install react-router-dom
 ```
 
 ---
