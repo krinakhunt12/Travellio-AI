@@ -1,58 +1,39 @@
-const axios = require('axios');
-
-const OPENAI_KEY = process.env.OPENAI_API_KEY;
-if (!OPENAI_KEY) console.warn('WARN: OPENAI_API_KEY not set in env');
-
-async function callOpenAI(prompt, maxTokens = 300) {
-  const url = 'https://api.openai.com/v1/chat/completions';
-  const resp = await axios.post(
-    url,
-    {
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'system', content: 'You are a travel assistant that writes concise hotel summaries.' }, { role: 'user', content: prompt }],
-      temperature: 0.1,
-      max_tokens: maxTokens
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${OPENAI_KEY}`,
-        'Content-Type': 'application/json'
-      }
-    }
-  );
-  return resp.data;
-}
-
-function buildPromptForHotels(hotels) {
-  const items = hotels.map(h => {
-    return `Hotel: ${h.name}\nPrice (INR): ${h.priceINR}\nCategory: ${h.category}\nRaw: ${JSON.stringify(h.raw).slice(0, 600)}\n---\n`;
-  }).join('\n');
-
-  return `For each hotel in the list, return a JSON array of objects with fields:\n- amenities: short comma-separated list\n- short_description: 18-30 words describing who it's best for\n- nightlife: 1 sentence about nearby nightlife/community\n- family_friendly: "Yes" or "No" with 6-10 words reasoning\nReturn only valid JSON (array) in the same order as input.\n\nInput:\n${items}`;
-}
-
+// Simple rule-based enrichment to avoid paid LLM usage.
+// For dev and free usage, this provides basic amenities and descriptions from OSM tags.
 const llm = {
   async enrichHotels(hotels) {
     try {
-      const prompt = buildPromptForHotels(hotels);
-      const data = await callOpenAI(prompt, 600);
-      const text = data?.choices?.[0]?.message?.content || data?.choices?.[0]?.text || '';
-      try {
-        const parsed = JSON.parse(text);
-        if (Array.isArray(parsed)) return parsed;
-      } catch (err) {
-        const jsonMatch = text.match(/\[.*\]/s);
-        if (jsonMatch) {
-          try {
-            return JSON.parse(jsonMatch[0]);
-          } catch (e) {
-            console.warn('LLM returned unparsable JSON', e);
-          }
-        }
-      }
-      return hotels.map(() => ({}));
+      return hotels.map((h) => {
+        const tags = (h.raw && h.raw.tags) || {};
+        // Build amenities list from tags
+        const amenities = [];
+        if (tags.wifi || /wifi|internet/i.test(JSON.stringify(tags))) amenities.push('Wi‑Fi');
+        if (tags.parking) amenities.push('Parking');
+        if (tags.breakfast || /breakfast/i.test(JSON.stringify(tags))) amenities.push('Breakfast');
+        if (tags.pool || /pool/i.test(JSON.stringify(tags))) amenities.push('Pool');
+        if (tags.restaurant) amenities.push('Restaurant');
+        if (amenities.length === 0) amenities.push('Basic amenities');
+
+        // Short description template
+        const distKm = h.dist ? Math.round((h.dist/100))/10 : null; // one decimal km
+        const descParts = [];
+        if (tags.stars) descParts.push(`${tags.stars}-star`);
+        if (tags['building'] || tags['brand']) descParts.push(tags['brand'] || tags['building']);
+        if (distKm) descParts.push(`~${distKm} km from center`);
+        const short_description = `${h.name}${descParts.length ? ' — ' + descParts.join(', ') : ''}. Great for travelers.`;
+
+        const nightlife = tags['leisure'] || tags['amenity'] ? 'Nearby local spots and cafes.' : 'Quiet area.';
+        const family_friendly = (tags['family'] || /family|children/i.test(JSON.stringify(tags))) ? 'Yes' : 'Yes';
+
+        return {
+          amenities: amenities.join(', '),
+          short_description,
+          nightlife,
+          family_friendly
+        };
+      });
     } catch (err) {
-      console.warn('LLM enrich error', err?.message || err);
+      console.warn('LLM (fallback) enrich error', err?.message || err);
       return hotels.map(() => ({}));
     }
   }

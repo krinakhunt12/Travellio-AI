@@ -11,8 +11,9 @@ import cache from '../utils/cache.js';
 // Helper: bucket price INR to category
 function bucketPrice(priceINR) {
   const p = Number(priceINR) || 0;
-  if (p >= 1500 && p <= 3000) return 'budget';
-  if (p > 3000 && p <= 7000) return 'mid';
+  // Use clearer bands: low (<3000), mid (3000-8000), high (>=8000)
+  if (p < 3000) return 'budget';
+  if (p >= 3000 && p < 8000) return 'mid';
   if (p >= 8000) return 'luxury';
   return 'other';
 }
@@ -73,19 +74,86 @@ router.get('/', async (req, res) => {
       enriched: enrichments[i] || {}
     }));
 
-    // group by category
+    // Deduplicate by normalized name + rounded location
+    const seen = new Set();
+    const deduped = [];
+    for (const h of merged) {
+      const nameKey = (h.name || '').toLowerCase().replace(/\s+/g, ' ').trim();
+      const lat = h.location?.lat ? Number(h.location.lat).toFixed(4) : '0';
+      const lon = h.location?.lon ? Number(h.location.lon).toFixed(4) : '0';
+      const key = `${nameKey}::${lat}::${lon}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      deduped.push(h);
+    }
+
+    // scoring heuristic: higher is better — produce mostly positive scores
+    function scoreHotel(h) {
+      const amenities = (h.enriched?.amenities || '').split(',').filter(Boolean).length;
+      const stars = Number(h.raw?.tags?.stars) || 0;
+      const dist = Number(h.dist || h.raw?.dist || 0) || 0;
+      const price = Number(h.priceINR || h.price || 0) || 0;
+      // Components
+      const amenityScore = amenities * 120; // each amenity worth 120
+      const starScore = stars * 600; // each star worth 600
+      const pricePenalty = (price / 1000) * 200; // larger price reduces score
+      const distPenalty = (dist / 1000) * 50; // distance penalty
+      const base = 1000; // baseline to keep scores positive
+      const score = base + amenityScore + starScore - pricePenalty - distPenalty;
+      return Math.round(score);
+    }
+
+    const scored = deduped.map(h => ({ ...h, score: scoreHotel(h) }));
+
+    // group and sort by score (desc). For 'budget' prefer lower price then amenities
+    const group = (arr, cat) => arr.filter(x => x.category === cat).sort((a, b) => {
+      if (cat === 'budget') {
+        // budget: prefer lower price, then higher score
+        const p = (a.price - b.price);
+        if (p !== 0) return p;
+        return (b.score - a.score);
+      }
+      // mid/luxury: prefer higher score, tie-breaker lower price
+      const s = (b.score - a.score);
+      if (s !== 0) return s;
+      return (a.price - b.price);
+    });
+
     const byCategory = {
-      budget: merged.filter(x => x.category === 'budget'),
-      mid: merged.filter(x => x.category === 'mid'),
-      luxury: merged.filter(x => x.category === 'luxury'),
-      other: merged.filter(x => x.category === 'other')
+      budget: group(scored, 'budget').slice(0, 10),
+      mid: group(scored, 'mid').slice(0, 10),
+      luxury: group(scored, 'luxury').slice(0, 10),
+      other: group(scored, 'other').slice(0, 10)
     };
 
     const response = {
       city,
-      count: merged.length,
-      results: merged,
-      byCategory
+      count: scored.length,
+      results: scored,
+      byCategory,
+      // also return top overall hotels
+      bestOverall: scored.slice().sort((a,b) => b.score - a.score).slice(0, 10)
+    };
+
+    // pick best single hotel per price range (low/mid/high) using tailored heuristics
+    function pickBestForRange(arr, range) {
+      if (!arr || arr.length === 0) return null;
+      if (range === 'low') {
+        // prioritize lowest price, then score
+        return arr.slice().sort((a,b) => (a.price - b.price) || (b.score - a.score))[0];
+      }
+      if (range === 'mid') {
+        // prioritize quality per price: score/price
+        return arr.slice().sort((a,b) => ((b.score / (b.price||1)) - (a.score / (a.price||1))) || (b.score - a.score))[0];
+      }
+      // high: prefer highest score, then price
+      return arr.slice().sort((a,b) => (b.score - a.score) || (b.price - a.price))[0];
+    }
+
+    response.bestPerRange = {
+      low: pickBestForRange(byCategory.budget, 'low'),
+      mid: pickBestForRange(byCategory.mid, 'mid'),
+      high: pickBestForRange(byCategory.luxury, 'high')
     };
 
     cache.set(cacheKey, response);
