@@ -1,12 +1,6 @@
-function convertToINR(price, currency = "USD") {
-  const rates = {
-    USD: 83,
-    EUR: 90,
-    IDR: 0.005
-  };
-
-  const rate = rates[currency] || 1;
-  return Math.round(price * rate);
-}
-
-module.exports = { convertToINR };
+// ESM wrapper to re-export canonical CommonJS implementation
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const currency = require('./currencyService.cjs');
+export const convertToINR = currency.convertToINR;
+export default currency;
