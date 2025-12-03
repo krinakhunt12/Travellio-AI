@@ -35,7 +35,14 @@ coverage/
 *.orig
 
 # Ignore env files in subfolders explicitly
-/backend/.env
+backend/.env
+backend/.env.*
 /Frontend/.env
 **/.env
 *.env.local
+# Ignore all env files everywhere
+*.env
+*.env.*
+.env
+.env.*
+
