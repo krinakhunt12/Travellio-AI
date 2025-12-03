@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import travelRouter from "./routes/travelAgent.js";
 import cityAnalysisAgent from "./agents/cityAnalysisAgent.js";
 import attractionsRoute from "./routes/attractionsRoute.js";
-import hotelsRouter from "./routes/hotels.js";
+import hotelRoutes from "./routes/hotelRoutes.js";
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use("/api/travel", travelRouter);
 app.post("/city-analysis", cityAnalysisAgent);
 app.use("/api/attractions", attractionsRoute);
-app.use('/api/hotels', hotelsRouter);
+app.use("/api/hotels", hotelRoutes);
 
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
