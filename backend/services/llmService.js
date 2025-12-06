@@ -1,6 +1,6 @@
-import axios from "axios";
+const axios = require("axios");
 
-export async function enrichHotelsLLM(hotels) {
+async function enrichHotelsLLM(hotels) {
   const prompt = `
 For each hotel, return JSON array with objects containing:
 - priceCategory: "budget" | "mid" | "luxury"
@@ -47,3 +47,5 @@ Hotels: ${JSON.stringify(hotels)}
     }));
   }
 }
+
+module.exports = { enrichHotelsLLM };

@@ -1,8 +1,8 @@
-import hotelApi from "../services/hotelApiService.js";
-import unsplash from "../services/unsplashService.js";
-import { enrichHotelsLLM } from "../services/llmService.js";
+const hotelApi = require("../../services/hotelApiService.js");
+const unsplash = require("../../services/unsplashService.js");
+const { enrichHotelsLLM } = require("../../services/llmService.js");
 
-export async function hotelAgent(city) {
+async function hotelAgent(city) {
   // 1. Get hotels (FREE)
   const hotels = await hotelApi.searchHotels(city);
 
@@ -28,3 +28,5 @@ export async function hotelAgent(city) {
     results: enriched
   };
 }
+
+module.exports = { hotelAgent };

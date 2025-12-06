@@ -1,7 +1,7 @@
-import { hotelAgent } from "../agents/hotelAgent.js";
-import cache from "../utils/cache.js";
+const { hotelAgent } = require("../agents/hotel-finder/hotelAgent.js");
+const cache = require("../utils/cache.js");
 
-export async function getHotels(req, res) {
+async function getHotels(req, res) {
   try {
     const { city } = req.query;
 
@@ -20,3 +20,5 @@ export async function getHotels(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
+
+module.exports = { getHotels };

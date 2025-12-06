@@ -1,5 +1,5 @@
-import axios from "axios";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+const axios = require("axios");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -88,7 +88,7 @@ ${JSON.stringify(rawData)}
     throw lastErr || new Error("No generative model available");
 }
 
-export default async function cityAnalysisAgent(req, res) {
+async function cityAnalysisAgent(req, res) {
     try {
         const { city, lat, lon, country } = req.body;
 
@@ -173,3 +173,5 @@ export default async function cityAnalysisAgent(req, res) {
         res.status(500).json({ error: error.message });
     }
 }
+
+module.exports = cityAnalysisAgent;

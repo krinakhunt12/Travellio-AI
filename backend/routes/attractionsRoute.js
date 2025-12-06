@@ -1,5 +1,5 @@
-import express from "express";
-import { AttractionFinderAgent } from "../agents/attractionAgent.js";
+const express = require("express");
+const { AttractionFinderAgent } = require("../agents/attractions/attractionAgent.js");
 
 const router = express.Router();
 
@@ -24,4 +24,4 @@ router.post("", async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

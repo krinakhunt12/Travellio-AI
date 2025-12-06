@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios = require("axios");
 
 const hotelApi = {
   async searchHotels(city) {
@@ -72,4 +72,4 @@ function extractAmenities(tags) {
   return amenities;
 }
 
-export default hotelApi;
+module.exports = hotelApi;

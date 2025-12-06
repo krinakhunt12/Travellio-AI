@@ -1,4 +1,4 @@
-import NodeCache from "node-cache";
-export default new NodeCache({
+const NodeCache = require("node-cache");
+module.exports = new NodeCache({
   stdTTL: Number(process.env.CACHE_TTL) || 3600
 });

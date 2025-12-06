@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios = require("axios");
 
 const unsplash = {
   async getPhoto(query) {
@@ -18,4 +18,4 @@ const unsplash = {
   }
 };
 
-export default unsplash;
+module.exports = unsplash;

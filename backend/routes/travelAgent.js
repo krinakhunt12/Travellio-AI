@@ -1,6 +1,6 @@
-import express from "express";
-import dotenv from "dotenv";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+const express = require("express");
+const dotenv = require("dotenv");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 dotenv.config();
 const router = express.Router();
@@ -197,4 +197,4 @@ RESPONSE FORMAT STRICT JSON (NO TEXT OUTSIDE JSON):
   }
 });
 
-export default router;
+module.exports = router;

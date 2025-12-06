@@ -3,8 +3,8 @@
 // Geoapify (Single API Call) + Unsplash + Gemini (Batch Mode)
 // ================================
 
-import axios from "axios";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+const axios = require("axios");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // ---------------------------------------
 // ENV VARIABLES
@@ -133,7 +133,7 @@ Return ONLY valid JSON array. No commentary.
 // ===============================================================
 // MASTER AGENT — FINAL VERSION
 // ===============================================================
-export async function AttractionFinderAgent(city) {
+async function AttractionFinderAgent(city) {
   console.log("➡️ Step 1: Fetching coordinates...");
   const { lat, lon } = await getCoordinates(city);
 
@@ -179,3 +179,5 @@ export async function AttractionFinderAgent(city) {
     attractions: final,
   };
 }
+
+module.exports = { AttractionFinderAgent };

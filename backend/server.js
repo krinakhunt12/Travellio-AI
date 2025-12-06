@@ -1,15 +1,13 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import travelRouter from "./routes/travelAgent.js";
-import cityAnalysisAgent from "./agents/cityAnalysisAgent.js";
-import attractionsRoute from "./routes/attractionsRoute.js";
-import hotelRoutes from "./routes/hotelRoutes.js";
-// import hotelRoutes from "./routes/hotelRoutes.js";
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const travelRouter = require("./routes/travelAgent.js");
+const cityAnalysisAgent = require("./agents/city-analysis/cityAnalysisAgent.js");
+const attractionsRoute = require("./routes/attractionsRoute.js");
+const hotelRoutes = require("./routes/hotelRoutes.js");
 const morgan = require('morgan');
-
+const itineraryRoutes = require("./routes/itinerary.routes");
+const budgetRoutes = require("./routes/budgetRoutes.js");
 dotenv.config();
 
 // Debug: Check if API key is loaded
@@ -23,9 +21,9 @@ app.use(morgan('dev'));
 app.use("/api/travel", travelRouter);
 app.post("/city-analysis", cityAnalysisAgent);
 app.use("/api/attractions", attractionsRoute);
-// app.use("/api/hotels", hotelRoutes);
-
+app.use("/api/itinerary", itineraryRoutes);
 app.use("/api/hotels", hotelRoutes);
+app.use("/api/budget", budgetRoutes);
 
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
