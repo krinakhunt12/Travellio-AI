@@ -1,8 +1,8 @@
 import express from "express";
-import { fetchHotels } from "../controllers/hotelController.js";
+import { getHotels } from "../controllers/hotelController.js";
 
 const router = express.Router();
 
-router.get("/", fetchHotels);
+router.get("/", getHotels);
 
 export default router;

@@ -4,13 +4,11 @@ import dotenv from "dotenv";
 import travelRouter from "./routes/travelAgent.js";
 import cityAnalysisAgent from "./agents/cityAnalysisAgent.js";
 import attractionsRoute from "./routes/attractionsRoute.js";
+import hotelRoutes from "./routes/hotelRoutes.js";
 // import hotelRoutes from "./routes/hotelRoutes.js";
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const morgan = require('morgan');
-const hotelsRouter = require('./routes/hotels.cjs');
-const { errorHandler } = require('./utils/errors');
-const { logger } = require('./utils/logger');
 
 dotenv.config();
 
@@ -22,15 +20,12 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-
-
 app.use("/api/travel", travelRouter);
 app.post("/city-analysis", cityAnalysisAgent);
 app.use("/api/attractions", attractionsRoute);
 // app.use("/api/hotels", hotelRoutes);
 
-app.use('/api/hotels', hotelsRouter);
-
+app.use("/api/hotels", hotelRoutes);
 
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
