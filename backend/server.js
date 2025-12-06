@@ -8,6 +8,7 @@ const hotelRoutes = require("./routes/hotelRoutes.js");
 const morgan = require('morgan');
 const itineraryRoutes = require("./routes/itinerary.routes");
 const budgetRoutes = require("./routes/budgetRoutes.js");
+const masterRoute = require("./routes/masterRoute.js");
 dotenv.config();
 
 // Debug: Check if API key is loaded
@@ -24,6 +25,7 @@ app.use("/api/attractions", attractionsRoute);
 app.use("/api/itinerary", itineraryRoutes);
 app.use("/api/hotels", hotelRoutes);
 app.use("/api/budget", budgetRoutes);
+app.use("/api/master", masterRoute);
 
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");

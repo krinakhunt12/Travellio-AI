@@ -116,11 +116,17 @@ async function cityAnalysisAgent(req, res) {
         // 1) Weather API (with timeout)
         let weather = null;
         try {
-            const w = await fetchWithRetries(
-                `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`,
-                { attempts: 2, timeout: 7000 }
-            );
-            weather = w.data;
+            // Only call weather API if we have valid coordinates
+            if (lat && lon && !isNaN(lat) && !isNaN(lon)) {
+                const w = await fetchWithRetries(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`,
+                    { attempts: 2, timeout: 7000 }
+                );
+                weather = w.data;
+            } else {
+                console.warn('Weather API skipped: Invalid or missing coordinates (lat:', lat, 'lon:', lon, ')');
+                weather = {};
+            }
         } catch (err) {
             console.warn('Weather API failed:', err && err.message);
             weather = {};
@@ -129,21 +135,33 @@ async function cityAnalysisAgent(req, res) {
         // 2) Country Info
         let countryInfo = null;
         try {
-            const c = await fetchWithRetries(`https://restcountries.com/v3.1/name/${country}?fullText=true`, { attempts: 2, timeout: 7000 });
-            countryInfo = c.data;
+            // Only call country API if we have a valid country name
+            if (country && country.trim()) {
+                const c = await fetchWithRetries(`https://restcountries.com/v3.1/name/${country}?fullText=true`, { attempts: 2, timeout: 7000 });
+                countryInfo = c.data;
+            } else {
+                console.warn('Country info API skipped: No country provided');
+                countryInfo = {};
+            }
         } catch (err) {
             console.warn('Country info API failed:', err && err.message);
             countryInfo = {};
         }
 
-        // 3) Safety API (travelbriefing) — may be unreliable; use retries and fallback
+        // 3) Safety API (travelbriefing) — may be unreliable; use shorter timeout and single attempt
         let advisory = null;
         try {
-            const a = await fetchWithRetries(`https://travelbriefing.org/${country}?format=json`, { attempts: 3, timeout: 7000, delay: 1200 });
-            advisory = a.data;
+            // Only call travel briefing if we have a valid country
+            if (country && country.trim()) {
+                const a = await fetchWithRetries(`https://travelbriefing.org/${country}?format=json`, { attempts: 1, timeout: 3000, delay: 500 });
+                advisory = a.data;
+            } else {
+                console.warn('TravelBriefing API skipped: No country provided');
+                advisory = {};
+            }
         } catch (err) {
-            // Network issue/timeouts are possible; don't fail the whole route because of this
-            console.warn('TravelBriefing advisory fetch failed (falling back to empty advisory):', err && err.message);
+            // This API is often unreliable; silently fall back to empty data
+            console.warn('TravelBriefing advisory fetch failed (using fallback data):', err && err.message);
             advisory = {};
         }
 
