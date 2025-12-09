@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import "../styles/colors.css";
+import { useGenerateTravelPlan } from "../api/travelPlanner";
 
 const steps = ["Source & Destination", "Dates", "Travelers", "Budget", "Interests"];
 
@@ -64,11 +65,36 @@ export default function PreferencesPage() {
     });
   }
 
+  // React Query mutation for generating the full travel plan
+  const generateMutation = useGenerateTravelPlan({
+    onSuccess(res) {
+      try {
+        localStorage.setItem('aiItinerary', JSON.stringify(res));
+      } catch (e) { /* ignore */ }
+      navigate('/itinerary');
+    },
+    onError(err) {
+      console.error('Generate travel plan failed', err);
+      // fallback: still navigate to summary page maybe
+    }
+  });
+
   function next() {
     if (step < steps.length - 1) setStep((s) => s + 1);
     else {
-      console.log("Preferences submitted", data);
-      navigate("/trip-summary");
+      // final step: submit form to backend AI planner
+      const payload = {
+        departureCity: data.source,
+        destination: data.destination,
+        travelDates: `${data.startDate || ''} - ${data.endDate || ''}`,
+        travellers: { adults: data.adults, children: data.children, infants: data.infants },
+        budget: { perDay: budgetAmount, pct: data.budgetPct },
+        interests: data.interests,
+        comfort: '',
+      };
+
+      // trigger mutation
+      generateMutation.mutate(payload);
     }
   }
 
@@ -156,6 +182,9 @@ export default function PreferencesPage() {
 
                 {/* Form Column */}
                 <div className="p-2 md:p-6">
+                  {/* mutation for generating travel plan */}
+                  {/** useGenerateTravelPlan hook created in src/api/travelPlanner.js */}
+                  {/** keep hook instantiation near the component top for React rules-of-hooks; we created it below */}
                   {/* Circular Step Markers */}
                   <div className="flex items-center justify-between mb-6">
                     {[
@@ -330,8 +359,9 @@ export default function PreferencesPage() {
                     onClick={next}
                     className="ml-auto px-6 py-3 rounded-2xl font-semibold text-white"
                     style={{ background: "linear-gradient(135deg,#6BBFF1,#2C74B3)", boxShadow: "0 6px 20px rgba(44,116,179,0.2)" }}
+                    disabled={generateMutation?.isLoading}
                   >
-                    {step < steps.length - 1 ? "Next" : "Generate My Trip 🚀"}
+                    {step < steps.length - 1 ? "Next" : (generateMutation?.isLoading ? 'Generating…' : "Generate My Trip 🚀")}
                   </button>
                 </div>
               </div>

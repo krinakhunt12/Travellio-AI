@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 
-const itinerary = [
+const sampleItinerary = [
   {
     day: 1,
     title: "Arrival & Beach Sunset",
@@ -46,9 +46,51 @@ export default function ItineraryPage() {
   const navigate = useNavigate();
   const [activeDay, setActiveDay] = useState(1);
   const [isVisible, setIsVisible] = useState(false);
+  const [remoteItinerary, setRemoteItinerary] = useState(null);
+
+  // Normalize backend itinerary to the UI structure used below
+  function normalizeDays(arr) {
+    if (!Array.isArray(arr)) return [];
+    return arr.map((d, idx) => {
+      const activities = Array.isArray(d.activities)
+        ? d.activities.map((a) => ({
+            time: a.time || a.partOfDay || a.when || '',
+            icon: a.icon || '📍',
+            title: a.title || a.name || a.activity || '',
+            description: a.description || a.desc || a.details || '',
+            duration: a.duration || a.time_estimate || '',
+          }))
+        : [];
+
+      return {
+        day: d.day || d.dayNumber || idx + 1,
+        title: d.title || d.name || `Day ${idx + 1}`,
+        tagline: d.tagline || d.summary || '',
+        activities,
+        color: d.color || '#2C74B3',
+        highlight: d.highlight || '',
+      };
+    });
+  }
 
   useEffect(() => {
     setIsVisible(true);
+    try {
+      const raw = localStorage.getItem('aiItinerary');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+
+        // Backend returns an object with `daywise_itinerary` key per the API prompt
+        const days = parsed?.daywise_itinerary || parsed?.daywiseItinerary || parsed;
+        if (Array.isArray(days) && days.length > 0) {
+          const normalized = normalizeDays(days);
+          setRemoteItinerary(normalized);
+          setActiveDay(normalized[0]?.day || 1);
+        }
+      }
+    } catch (err) {
+      // ignore parse errors and continue with sample itinerary
+    }
   }, []);
 
   return (
@@ -87,8 +129,8 @@ export default function ItineraryPage() {
             </div>
 
             {/* Day Navigation */}
-            <div className="flex flex-wrap justify-center gap-4 mb-16">
-              {itinerary.map((day) => (
+              <div className="flex flex-wrap justify-center gap-4 mb-16">
+              { (remoteItinerary || sampleItinerary).map((day) => (
                 <button
                   key={day.day}
                   onClick={() => setActiveDay(day.day)}
@@ -129,7 +171,7 @@ export default function ItineraryPage() {
 
             {/* Timeline Items */}
             <div className="space-y-16 lg:space-y-24">
-              {itinerary.map((day, dayIndex) => (
+              {(remoteItinerary || sampleItinerary).map((day, dayIndex) => (
                 <div key={day.day} className="relative">
                   {/* Day Header - Mobile */}
                   <div className="lg:hidden mb-8">

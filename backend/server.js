@@ -9,6 +9,7 @@ const morgan = require('morgan');
 const itineraryRoutes = require("./routes/itinerary.routes");
 const budgetRoutes = require("./routes/budgetRoutes.js");
 const masterRoute = require("./routes/masterRoute.js");
+const cityAnalysisAgent = require("./agents/city-analysis/cityAnalysisAgent.js");
 dotenv.config();
 
 // Debug: Check if API key is loaded
@@ -20,7 +21,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 app.use("/api/travel", travelRouter);
-app.post("/city-analysis", cityAnalysisAgent);
+app.post("/api/city-analysis", cityAnalysisAgent);
 app.use("/api/attractions", attractionsRoute);
 app.use("/api/itinerary", itineraryRoutes);
 app.use("/api/hotels", hotelRoutes);
