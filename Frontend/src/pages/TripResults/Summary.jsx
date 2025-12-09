@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTripContext } from '../../context/TripContext';
 import { useHotels } from '../../api/hotelFinder';
 import { useBudgetQuery } from '../../api/budgetCalculator';
-import { useGenerateTravelPlan } from '../../api/travelPlanner';
+import { useGenerateTravelPlan, useGenerateMasterPlan } from '../../api/travelPlanner';
 
 export default function Summary() {
   const { tripData } = useTripContext();
@@ -32,6 +32,25 @@ export default function Summary() {
     }
   });
 
+  const { setTripData } = useTripContext();
+
+  const masterMutation = useGenerateMasterPlan({
+    onSuccess(data) {
+      setPlan(data);
+      // persist into trip context and localStorage in a normalized way
+      try {
+        const planPayload = data?.data || data;
+        setTripData((prev) => ({ ...prev, masterPlan: planPayload, destination: planPayload?.metadata?.destination || prev.destination, attractions: planPayload?.data?.attractions || planPayload?.attractions || prev.attractions, itinerary: planPayload?.data?.daywise_itinerary || planPayload?.daywise_itinerary || prev.itinerary, hotels: planPayload?.data?.hotels || planPayload?.hotels || prev.hotels, costBreakdown: planPayload?.data?.final_budget_breakdown || planPayload?.final_budget_breakdown || prev.costBreakdown }));
+        localStorage.setItem('aiItinerary', JSON.stringify(data));
+      } catch (e) {
+        // ignore
+      }
+    },
+    onError(err) {
+      setError(err.message || String(err));
+    }
+  });
+
   // data is fetched via the hooks above; refetch available if needed
 
   function handleGeneratePlan() {
@@ -46,7 +65,8 @@ export default function Summary() {
       comfort: tripData.comfort || '',
     };
 
-    generateMutation.mutate(payload);
+    // call master plan mutation to get the integrated plan from backend master agent
+    masterMutation.mutate(payload);
   }
 
   return (
@@ -83,7 +103,7 @@ export default function Summary() {
 
         <div style={{ padding: 12, border: '1px solid #eee', borderRadius: 8, background: '#fff' }}>
           <h3>Full AI Travel Plan</h3>
-          <button onClick={handleGeneratePlan} disabled={loadingPlan}>{loadingPlan ? 'Generating…' : 'Generate Full Plan'}</button>
+          <button onClick={handleGeneratePlan} disabled={masterMutation?.isLoading}>{masterMutation?.isLoading ? 'Generating…' : 'Generate Full Plan'}</button>
           {plan && <pre style={{ whiteSpace: 'pre-wrap', marginTop: 8 }}>{JSON.stringify(plan, null, 2)}</pre>}
         </div>
       </div>

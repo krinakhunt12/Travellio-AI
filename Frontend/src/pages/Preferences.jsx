@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import "../styles/colors.css";
-import { useGenerateTravelPlan } from "../api/travelPlanner";
+import { apiFetch, BASE_URL } from "../api/apiClient";
 
 const steps = ["Source & Destination", "Dates", "Travelers", "Budget", "Interests"];
 
@@ -65,36 +65,48 @@ export default function PreferencesPage() {
     });
   }
 
-  // React Query mutation for generating the full travel plan
-  const generateMutation = useGenerateTravelPlan({
-    onSuccess(res) {
-      try {
-        localStorage.setItem('aiItinerary', JSON.stringify(res));
-      } catch (e) { /* ignore */ }
-      navigate('/itinerary');
-    },
-    onError(err) {
-      console.error('Generate travel plan failed', err);
-      // fallback: still navigate to summary page maybe
-    }
-  });
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  function next() {
+  async function next() {
     if (step < steps.length - 1) setStep((s) => s + 1);
     else {
       // final step: submit form to backend AI planner
-      const payload = {
-        departureCity: data.source,
-        destination: data.destination,
-        travelDates: `${data.startDate || ''} - ${data.endDate || ''}`,
-        travellers: { adults: data.adults, children: data.children, infants: data.infants },
-        budget: { perDay: budgetAmount, pct: data.budgetPct },
-        interests: data.interests,
-        comfort: '',
-      };
+      // derive days and total travellers in the format master expects
+      const start = data.startDate ? new Date(data.startDate) : null;
+      const end = data.endDate ? new Date(data.endDate) : null;
+      let days = 3;
+      if (start && end && !isNaN(start) && !isNaN(end)) {
+        const diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+        days = diff > 0 ? diff : 3;
+      }
 
-      // trigger mutation
-      generateMutation.mutate(payload);
+      const totalTravellers = (data.adults || 0) + (data.children || 0) + (data.infants || 0);
+
+      // master expects a numeric budget (example shows total budget), compute an estimated total
+      const estimatedTotalBudget = Math.round(budgetAmount * days * Math.max(1, totalTravellers));
+
+      const payload = {
+        departureCity: data.source || '',
+        destination: data.destination || '',
+        travelDates: `${days} days`,
+        travellers: totalTravellers || 1,
+        budget: estimatedTotalBudget,
+        interests: data.interests,
+        comfort: 'mid',
+      };
+      // call master endpoint directly to avoid react-query runtime mismatch
+      try {
+        setIsGenerating(true);
+        const res = await apiFetch(`${BASE_URL}/api/master/plan`, { method: 'POST', body: payload });
+        // backend returns { success: true, data: finalPlan }
+        const plan = res?.data || res;
+        try { localStorage.setItem('aiItinerary', JSON.stringify(plan)); } catch (e) {}
+        navigate('/itinerary');
+      } catch (err) {
+        console.error('Master plan generation failed', err);
+      } finally {
+        setIsGenerating(false);
+      }
     }
   }
 
@@ -359,9 +371,9 @@ export default function PreferencesPage() {
                     onClick={next}
                     className="ml-auto px-6 py-3 rounded-2xl font-semibold text-white"
                     style={{ background: "linear-gradient(135deg,#6BBFF1,#2C74B3)", boxShadow: "0 6px 20px rgba(44,116,179,0.2)" }}
-                    disabled={generateMutation?.isLoading}
+                    disabled={isGenerating}
                   >
-                    {step < steps.length - 1 ? "Next" : (generateMutation?.isLoading ? 'Generating…' : "Generate My Trip 🚀")}
+                    {step < steps.length - 1 ? "Next" : (isGenerating ? 'Generating…' : "Generate My Trip 🚀")}
                   </button>
                 </div>
               </div>

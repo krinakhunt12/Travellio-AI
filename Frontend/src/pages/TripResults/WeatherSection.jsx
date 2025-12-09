@@ -5,7 +5,16 @@ import { useCityAnalysis } from "../../api/cityAnalysis";
 export default function WeatherSection() {
   const { tripData } = useTripContext();
   const { data: analysis, isFetching: loading, error, refetch } = useCityAnalysis(tripData?.destination);
-  // useCityAnalysis handles fetching when destination exists
+  // prefer master plan analysis if available
+  const plan = tripData?.masterPlan;
+  const planAnalysis = plan
+    ? {
+        best_time_to_visit: plan.best_time_to_visit,
+        weather_overview: plan.weather_overview,
+        city_safety_and_tips: plan.city_safety_and_tips,
+        local_culture_and_practical_info: plan.local_culture_and_practical_info,
+      }
+    : null;
 
   const renderField = (key, val) => {
     if (val == null) return null;
@@ -57,18 +66,23 @@ export default function WeatherSection() {
       {loading && <p>Loading city analysis…</p>}
       {error && <div style={{ color: '#b00020' }}>Error: {error}</div>}
 
-      {analysis && !loading && (
+      {(planAnalysis || (analysis && !loading)) && (
         <div style={{ display: 'grid', gap: 12 }}>
-          {Object.keys(analysis).length === 0 && (
-            <p>No analysis data returned.</p>
+          {planAnalysis ? (
+            Object.entries(planAnalysis).map(([k, v]) => (
+              <div key={k} style={{ padding: 12, border: '1px solid #eee', borderRadius: 8, background: '#fff' }}>
+                <h4 style={{ marginTop: 0 }}>{k}</h4>
+                {renderField(k, v)}
+              </div>
+            ))
+          ) : (
+            Object.entries(analysis).map(([k, v]) => (
+              <div key={k} style={{ padding: 12, border: '1px solid #eee', borderRadius: 8, background: '#fff' }}>
+                <h4 style={{ marginTop: 0 }}>{k}</h4>
+                {renderField(k, v)}
+              </div>
+            ))
           )}
-
-          {Object.entries(analysis).map(([k, v]) => (
-            <div key={k} style={{ padding: 12, border: '1px solid #eee', borderRadius: 8, background: '#fff' }}>
-              <h4 style={{ marginTop: 0 }}>{k}</h4>
-              {renderField(k, v)}
-            </div>
-          ))}
         </div>
       )}
     </div>

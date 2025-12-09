@@ -23,8 +23,11 @@ const imgStyle = {
 export default function Attractions() {
   const { tripData, setTripData } = useTripContext();
   const { data, isLoading, isError, refetch } = useAttractions(tripData?.destination);
-  const attractions = data?.attractions || data?.data?.attractions || [];
-  const loading = isLoading;
+  // prefer master plan attractions if available
+  const attractionsFromPlan = tripData?.masterPlan?.attractions || tripData?.attractions || [];
+  const fetchedAttractions = data?.attractions || data?.data?.attractions || [];
+  const attractions = attractionsFromPlan.length ? attractionsFromPlan : fetchedAttractions;
+  const loading = isLoading && !attractionsFromPlan.length;
   const error = isError ? 'Failed to load attractions' : null;
 
   function addToItinerary(item) {

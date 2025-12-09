@@ -17,7 +17,8 @@ export default function Itinerary() {
     }
   });
 
-  const attractions = tripData?.itinerary || [];
+  // prefer master plan daywise itinerary if available
+  const attractions = tripData?.masterPlan?.daywise_itinerary || tripData?.itinerary || [];
 
   function handleGenerate() {
     if (!attractions.length) return setError('No attractions selected');

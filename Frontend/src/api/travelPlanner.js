@@ -11,4 +11,14 @@ export function useGenerateTravelPlan(options = {}) {
   return useMutation((payload) => generateTravelPlan(payload), { ...options });
 }
 
+// Master orchestrator (calls backend master agent)
+export async function generateMasterPlan(payload) {
+  const json = await apiFetch(`${BASE_URL}/api/master/plan`, { method: 'POST', body: payload });
+  return json;
+}
+
+export function useGenerateMasterPlan(options = {}) {
+  return useMutation((payload) => generateMasterPlan(payload), { ...options });
+}
+
 export default { generateTravelPlan, useGenerateTravelPlan };
